@@ -1,0 +1,36 @@
+{
+  "name": "caching-proxy",
+  "version": "1.0.0",
+  "description": "A cli tool that starts a caching proxy server, it will forward requests to the actual server and cache the responses. if the same request is made again, it will return the cached response instead of forwarding the request to the server.",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "jest",
+    "dev": "tsx watch server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BigFudge420/caching-proxy.git"
+  },
+  "bin": {
+    "caching-proxy" : "dist/server.js"
+  },
+  "author": "bigfudge",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BigFudge420/caching-proxy/issues"
+  },
+  "homepage": "https://github.com/BigFudge420/caching-proxy#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "yargs": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.3",
+    "@types/yargs": "^17.0.35",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
