@@ -15,7 +15,7 @@
     "url": "git+https://github.com/BigFudge420/caching-proxy.git"
   },
   "bin": {
-    "caching-proxy": "./bin/caching-proxy"
+    "caching-proxy": "./src/server.ts"
   },
   "author": "bigfudge",
   "license": "ISC",
