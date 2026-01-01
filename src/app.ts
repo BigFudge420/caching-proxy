@@ -4,8 +4,8 @@ import forwardController from './controllers/forwardController.js'
 const app = express()
 
 app.use(express.raw({type : '/*'}))
-app.all(/^\/.*/, (res, req, next) => {
-    forwardController(res, req, next)
+app.all(/^\/.*/, (req, res, next) => {
+    forwardController(req, res, next)
 })
 
 export default app
