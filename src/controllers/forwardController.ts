@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { argv } from "../argv.js"
+import sanitizeHeaders from "../util/sanitizeHeaders.js"
 
 const forwardController = async ( req : Request, res : Response, next : NextFunction ) => {
     const upstreamURL = argv.origin + req.originalUrl
@@ -7,11 +8,7 @@ const forwardController = async ( req : Request, res : Response, next : NextFunc
                     ? undefined 
                     : req.body 
         
-    const headers = new Headers
-
-    for (const [key, value] of Object.entries(req.headers)) {
-        headers.set(key, String(value))
-    }
+    const headers = sanitizeHeaders(req)
 
     const upstreamRes = await fetch(upstreamURL, {
             method : req.method,
