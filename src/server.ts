@@ -1,14 +1,6 @@
 #!/usr/bin/env node
-import yargs from "yargs"
-import { hideBin } from "yargs/helpers"
-import startServer from "./util/startServer"
-
-const argv = yargs(hideBin(process.argv))
-  .option("port", {
-    type: "number",
-    default: 3000,
-  })
-  .parseSync()
+import startServer from "./util/startServer.js"
+import { argv } from "./argv.js"
 
 const server = startServer(argv.port)
 

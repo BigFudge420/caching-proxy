@@ -1,0 +1,1 @@
+export const hideBin = (argv) => argv.slice(2);

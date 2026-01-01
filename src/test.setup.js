@@ -1,4 +1,4 @@
-import {beforeAll, afterAll, afterEach} from '@jest/globals'
+import { beforeAll, afterAll, afterEach } from '@jest/globals';
 import nock from "nock";
 
 beforeAll(() => {
