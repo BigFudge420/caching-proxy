@@ -25,7 +25,7 @@
   "homepage": "https://github.com/BigFudge420/caching-proxy#readme",
   "dependencies": {
     "express": "^5.2.1",
-    "yargs": "^17.7.2"
+    "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
