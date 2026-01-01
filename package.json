@@ -2,12 +2,12 @@
   "name": "caching-proxy",
   "version": "1.0.0",
   "description": "A cli tool that starts a caching proxy server, it will forward requests to the actual server and cache the responses. if the same request is made again, it will return the cached response instead of forwarding the request to the server.",
-  "main": "dist/server.js",
+  "main": "src/server.ts",
   "scripts": {
-    "test": "jest",
-    "dev": "tsx watch server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js"
+    "test": "node --experimental-strip-types --test src/controllers/forwardController.test.ts",
+    "dev": "node --experimental-strip-types --watch src/server.ts",
+    "start": "node --experimental-strip-types src/server.ts",
+    "type-check": "tsc --noEmit"
   },
   "type": "module",
   "repository": {
@@ -15,7 +15,7 @@
     "url": "git+https://github.com/BigFudge420/caching-proxy.git"
   },
   "bin": {
-    "caching-proxy": "dist/server.js"
+    "caching-proxy": "./bin/caching-proxy"
   },
   "author": "bigfudge",
   "license": "ISC",
@@ -28,21 +28,12 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.5",
-    "@babel/preset-env": "^7.28.5",
-    "@babel/preset-typescript": "^7.28.5",
-    "@jest/globals": "^29.7.0",
     "@types/express": "^5.0.6",
     "@types/node": "^25.0.3",
     "@types/supertest": "^6.0.3",
     "@types/yargs": "^17.0.35",
-    "babel-jest": "^29.7.0",
-    "jest": "^29.7.0",
     "nock": "^14.0.10",
     "supertest": "^7.1.4",
-    "ts-jest": "^29.4.6",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
 }

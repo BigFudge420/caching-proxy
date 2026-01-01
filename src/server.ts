@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import startServer from "./util/startServer.js"
-import { argv } from "./argv.js"
+import startServer from "./util/startServer.ts"
+import { argv } from "./argv.ts"
 
 const server = startServer(argv.port)
 

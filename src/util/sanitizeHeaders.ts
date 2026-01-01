@@ -1,4 +1,4 @@
-import {Request} from 'express'
+import type {Request} from 'express'
 
 const HOP_BY_HOP_HEADERS = [
   'connection',

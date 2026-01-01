@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express"
-import { argv } from "../argv.js"
-import sanitizeHeaders from "../util/sanitizeHeaders.js"
+import type { Request, Response, NextFunction } from "express"
+import { argv } from "../argv.ts"
+import sanitizeHeaders from "../util/sanitizeHeaders.ts"
 
 const forwardController = async ( req : Request, res : Response, next : NextFunction ) => {
     const upstreamURL = argv.origin + req.originalUrl

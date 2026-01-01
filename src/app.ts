@@ -1,5 +1,5 @@
 import express from 'express'
-import forwardController from './controllers/forwardController.js'
+import forwardController from './controllers/forwardController.ts'
 
 const app = express()
 
