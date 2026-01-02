@@ -1,45 +1,49 @@
-import type {Request} from 'express'
+import type { Request } from "express";
 
-const HOP_BY_HOP_HEADERS = [
-  'connection',
-  'keep-alive',
-  'proxy-authenticate',
-  'proxy-authorization',
-  'te',
-  'trailer',
-  'transfer-encoding',
-  'upgrade'
+export const HOP_BY_HOP_HEADERS = [
+  "connection",
+  "keep-alive",
+  "proxy-authenticate",
+  "proxy-authorization",
+  "te",
+  "trailer",
+  "transfer-encoding",
+  "upgrade",
 ];
 
-const sanitizeHeaders = (req : Request) : Headers => {
-    const sanitized = new Headers
-    const connectionHeaders = req.headers.connection
-    
-    for (const [key, value] of Object.entries(req.headers)) {
-        if (HOP_BY_HOP_HEADERS.includes(key.toLowerCase()) || connectionHeaders?.includes(key.toLowerCase())) {
-            continue
-        }
+const sanitizeHeaders = (req: Request): Headers => {
+  const sanitized = new Headers();
+  const connectionHeaders = req.headers.connection;
 
-        if (Array.isArray(value)) {
-            sanitized.set(key, value.join(', '))
-        }
-        else if (value !== undefined) {
-            sanitized.set(key, String(value))
-        }
+  for (const [key, value] of Object.entries(req.headers)) {
+    if (
+      HOP_BY_HOP_HEADERS.includes(key.toLowerCase()) ||
+      connectionHeaders?.includes(key.toLowerCase())
+    ) {
+      continue;
     }
 
-    const clientIP = req.ip ?? req.socket.remoteAddress ?? 'unknown'
-    const proto = req.protocol
-    const host = req.headers.host ?? 'unknown'
+    if (Array.isArray(value)) {
+      sanitized.set(key, value.join(", "));
+    } else if (value !== undefined) {
+      sanitized.set(key, String(value));
+    }
+  }
 
-    const newForwarded = `for=${clientIP};host=${host};proto=${proto}`
-    const existingForwared = req.headers['forwarded']
+  const clientIP = req.ip ?? req.socket.remoteAddress ?? "unknown";
+  const proto = req.protocol;
+  const host = req.headers.host ?? "unknown";
 
-    const forwarded = existingForwared ? `${existingForwared}, ${newForwarded}` : newForwarded
+  const newForwarded = `for=${clientIP};host=${host};proto=${proto}`;
+  const existingForwared = req.headers["forwarded"];
 
-    sanitized.set('forwarded', forwarded)
+  const forwarded = existingForwared
+    ? `${existingForwared}, ${newForwarded}`
+    : newForwarded;
 
-    return sanitized
-}
+  sanitized.set("forwarded", forwarded);
 
-export default sanitizeHeaders
+  return sanitized;
+};
+
+export default sanitizeHeaders;
