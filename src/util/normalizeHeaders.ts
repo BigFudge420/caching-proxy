@@ -1,25 +1,30 @@
-const normalizeHeaders = (headers: Headers): Headers => {
-  const enc = headers.get("accept-encoding")?.trim();
+import type { Request } from "express";
+
+const normalizeHeaders = (req: Request): Headers => {
+  const enc = req.headers["accept-encoding"]?.toLowerCase();
 
   let acceptEnc = "identity";
 
-  if (enc?.includes("br")) {
-    acceptEnc = "br";
-  } else if (enc?.includes("gzip")) {
-    acceptEnc = "gzip";
-  }
+  if (enc?.includes("br")) acceptEnc = "br";
+  else if (enc?.includes("gzip")) acceptEnc = "gzip";
+
+  const rawLang = req.headers["accept-language"];
 
   const lang =
-    headers.get("accept-language")?.trim().split(",")[0].toLowerCase() || "en";
-  const auth = headers.get("authorization") || "";
+    (Array.isArray(rawLang) ? rawLang[0] : rawLang)
+      ?.trim()
+      .toLocaleLowerCase()
+      .split(",")[0] || "en";
 
-  const normHeaders = new Headers();
+  const auth = req.headers["authorization"] || "";
 
-  normHeaders.set("accept-encoding", String(acceptEnc));
-  normHeaders.set("accept-language", String(lang));
-  normHeaders.set("authorization", String(auth));
+  const norm = new Headers();
 
-  return normHeaders;
+  norm.set("accept-encoding", acceptEnc);
+  norm.set("accept-language", lang);
+  norm.set("authorization", auth);
+
+  return norm;
 };
 
 export default normalizeHeaders;

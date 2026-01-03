@@ -1,14 +1,19 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 import normalizeHeaders from "./normalizeHeaders.ts";
+import mockReq from "./mockReq.ts";
 
 describe("normalzieHeaders", () => {
-  const headers1 = new Headers();
-  headers1.set("Accept-Encoding", "br, gzip, identity");
-  headers1.set("Accept-language", "en-US, en;q=0.8, en;q=0.7");
-  headers1.set("Authorization", "");
+  const req1 = mockReq({
+    method: "GET",
+    headers: {
+      "accept-encoding": "br, gzip,identity",
+      "accept-language": "en-US, en;q=0.8, en;q=0.7",
+      authorization: "",
+    },
+  });
 
-  const normalized1 = normalizeHeaders(headers1);
+  const normalized1 = normalizeHeaders(req1);
 
   it("test accept-encoding", () => {
     assert.strictEqual(normalized1.get("accept-encoding"), "br");
@@ -22,15 +27,16 @@ describe("normalzieHeaders", () => {
     assert.strictEqual(normalized1.get("authorization"), "");
   });
 
-  const headers2 = new Headers();
-  headers2.set("Accept-Encoding", "identity, gzip");
-  headers2.set(
-    "Accept-language",
-    "fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5"
-  );
-  headers2.set("Authorization", "Bearer abc123");
+  const req2 = mockReq({
+    method: "GET",
+    headers: {
+      "accept-encoding": "identity, gzip",
+      "accept-language": "fr-CH, en;q=0.8, en;q=0.7",
+      authorization: "Bearer abc123",
+    },
+  });
 
-  const normalized2 = normalizeHeaders(headers2);
+  const normalized2 = normalizeHeaders(req2);
 
   it("test accept-encoding", () => {
     assert.strictEqual(normalized2.get("accept-encoding"), "gzip");
