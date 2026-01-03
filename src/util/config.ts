@@ -3,11 +3,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 interface Config {
-  signature: string;
+  secret: string;
 }
 
 const config: Config = {
-  signature:
+  secret:
     process.env.SECRET ||
     (() => {
       throw new Error("SECRET not initialized");
