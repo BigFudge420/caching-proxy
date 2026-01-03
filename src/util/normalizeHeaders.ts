@@ -1,7 +1,5 @@
-import { Request } from "express";
-
-const normalizeHeaders = (req: Request) => {
-  const enc = req.headers["accept-encoding"]?.trim();
+const normalizeHeaders = (headers: Headers): Headers => {
+  const enc = headers.get("accept-encoding")?.trim();
 
   let acceptEnc = "identity";
 
@@ -12,8 +10,8 @@ const normalizeHeaders = (req: Request) => {
   }
 
   const lang =
-    req.headers["accept-language"]?.trim().split(",")[0].toLowerCase() || "en";
-  const auth = req.headers["authorization"]?.trim() || "";
+    headers.get("accept-language")?.trim().split(",")[0].toLowerCase() || "en";
+  const auth = headers.get("authorization") || "";
 
   const normHeaders = new Headers();
 
