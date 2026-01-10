@@ -39,7 +39,7 @@ const updateCache = async (
     const metadata = {
       method: req.method.toUpperCase(),
       createdAt: Date.now(),
-      vary,
+      vary: varyKeys,
     };
 
     // store metadata in cache
