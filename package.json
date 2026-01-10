@@ -4,7 +4,8 @@
   "description": "A cli tool that starts a caching proxy server, it will forward requests to the actual server and cache the responses. if the same request is made again, it will return the cached response instead of forwarding the request to the server.",
   "main": "src/server.ts",
   "scripts": {
-    "test": "node --experimental-strip-types --test src/controllers/forwardController.test.ts",
+    "test": "node --experimental-strip-types --test src/**/*.test.ts",
+    "test:specific": "node --experimental-strip-types --test",
     "dev": "node --experimental-strip-types --watch src/server.ts",
     "start": "node --experimental-strip-types src/server.ts",
     "type-check": "tsc --noEmit"
@@ -24,7 +25,9 @@
   },
   "homepage": "https://github.com/BigFudge420/caching-proxy#readme",
   "dependencies": {
+    "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "redis": "^5.10.0",
     "yargs": "^18.0.0"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import config from "./config";
+import config from "./config.ts";
 import crypto from "crypto";
 import type { Request } from "express";
 import normalizeHeaders from "./normalizeHeaders.ts";

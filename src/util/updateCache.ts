@@ -1,8 +1,8 @@
 import type { Request } from "express";
 import crypto from "crypto";
-import config from "./config";
-import redis from "../clients/redis";
-import { HOP_BY_HOP_HEADERS } from "./sanitizeHeaders";
+import config from "./config.ts";
+import redis from "../clients/redis.ts";
+import { HOP_BY_HOP_HEADERS } from "./sanitizeHeaders.ts";
 
 const updateCache = async (
   req: Request,

@@ -1,6 +1,6 @@
 import type { Request } from "express";
-import redis from "../clients/redis";
-import config from "./config";
+import redis from "../clients/redis.ts";
+import config from "./config.ts";
 import crypto from "crypto";
 
 const checkCache = async (req: Request, pkey: string) => {
@@ -44,7 +44,8 @@ const checkCache = async (req: Request, pkey: string) => {
     .digest("hex");
 
   // fetch varied cache or return false if not cached
-  if (!redis.exists(`${pkey}:vary:${skey}`)) return false;
+  const cached = await redis.exists(`${pkey}:vary:${skey}`);
+  if (!cached) return false;
 
   const status = await redis.hGet(`${pkey}:vary:${skey}`, "status");
   const resHeaders = await redis.hGet(`${pkey}:vary:${skey}`, "headers");
