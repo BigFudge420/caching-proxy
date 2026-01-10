@@ -149,19 +149,19 @@ describe("cacheController", () => {
   it("tests status code forwarding", async () => {
     nock("https://dummyjson.com").get("/product").reply(200);
 
-    const res200 = await request("https://dummyjson.com").get("/product");
+    const res200 = await request(app).get("/product");
 
     assert.strictEqual(res200.status, 200);
 
     nock("https://dummyjson.com").get("/product").reply(300);
 
-    const res300 = await request("https://dummyjson.com").get("/product");
+    const res300 = await request(app).get("/product");
 
     assert.strictEqual(res300.status, 300);
 
     nock("https://dummyjson.com").get("/product").reply(400);
 
-    const res400 = await request("https://dummyjson.com").get("/product");
+    const res400 = await request(app).get("/product");
 
     assert.strictEqual(res400.status, 400);
     assert.strictEqual(nock.isDone(), true);
