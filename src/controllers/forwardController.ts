@@ -31,6 +31,7 @@ const forwardController = async (
       cache = await checkCache(req, pkey);
     } catch (error) {
       // Redis not available, skip caching
+      console.error("Redis failed checking cache: ", error);
       cache = false;
     }
   }
@@ -47,6 +48,7 @@ const forwardController = async (
     }
 
     if (cache.body) res.setHeader("Content-Length", cache.body?.length);
+    res.setHeader("X-Cache", "HIT");
     return res.send(cache.body);
   }
 
@@ -72,6 +74,7 @@ const forwardController = async (
   }
 
   res.setHeader("Content-Length", resBody.length);
+  res.setHeader("X-Cache", "MISS");
   res.status(upstreamRes.status);
   res.send(resBody);
 
@@ -81,6 +84,7 @@ const forwardController = async (
       updateCache(req, upstreamRes, resBody, pkey);
     } catch (error) {
       // Cache update failed, continue normally
+      console.error("Redis failed updating cache: ", error);
     }
   }
 };
