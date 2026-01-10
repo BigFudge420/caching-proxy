@@ -10,6 +10,8 @@ const updateCache = async (
   bodyBuf: Buffer,
   pkey: string
 ) => {
+  const ttl = config.ttl;
+
   // check for vary headers
   if (res.headers.get("vary")?.trim()) {
     const varyHeader: string = res.headers.get("vary") ?? "";
@@ -42,31 +44,31 @@ const updateCache = async (
       vary: varyKeys,
     };
 
-    // store metadata in cache
-    await redis.hSet(pkey, "metadata", JSON.stringify(metadata));
+    const varyKey = `${pkey}:vary:${skey}`;
 
-    // cache response status
-    await redis.hSet(`${pkey}:vary:${skey}`, "status", String(res.status));
+    // queue caching to ensure atomicity
+    const multi = redis.multi();
+
+    // cache with primary key (metadata)
+    multi.hSet(pkey, "metadata", JSON.stringify(metadata));
+    multi.expire(pkey, ttl);
 
     // filter response headers
     const resHeaders: Record<string, string> = {};
     for (const [k, v] of res.headers.entries()) {
-      if (HOP_BY_HOP_HEADERS.includes(k.toLowerCase())) {
-        continue;
-      }
-
+      if (HOP_BY_HOP_HEADERS.includes(k.toLowerCase())) continue;
       resHeaders[k] = v;
     }
 
-    // cache response headers
-    await redis.hSet(
-      `${pkey}:vary:${skey}`,
-      "headers",
-      JSON.stringify(resHeaders)
-    );
+    // cache with vary key (response)
+    multi.hSet(varyKey, {
+      status: String(res.status),
+      headers: JSON.stringify(resHeaders),
+      body: bodyBuf,
+    });
+    multi.expire(varyKey, ttl);
 
-    // cache response body as buffer
-    await redis.hSet(`${pkey}:vary:${skey}`, "body", bodyBuf);
+    await multi.exec();
   } else {
     // create metadata with no vary headers
     const metadata = {
@@ -75,34 +77,32 @@ const updateCache = async (
       vary: undefined,
     };
 
-    // cache metadata (undefined vary header)
-    await redis.hSet(pkey, "metadata", JSON.stringify(metadata));
-
-    // Deterministic key produced by applying HMAC-SHA256 on an empty string with using the predefined secret
+    // assign deterministic default skey
     const skey: string = config.skey_default;
+    const varyKey = `${pkey}:vary:${skey}`;
 
-    // cache response status
-    await redis.hSet(`${pkey}:vary:${skey}`, "status", String(res.status));
+    const multi = redis.multi();
+
+    // cache with primary key (metadata)
+    multi.hSet(pkey, "metadata", JSON.stringify(metadata));
+    multi.expire(pkey, ttl);
 
     // filter response headers
     const resHeaders: Record<string, string> = {};
     for (const [k, v] of res.headers.entries()) {
-      if (HOP_BY_HOP_HEADERS.includes(k.toLowerCase())) {
-        continue;
-      }
-
+      if (HOP_BY_HOP_HEADERS.includes(k.toLowerCase())) continue;
       resHeaders[k] = v;
     }
 
-    // cache response headers
-    await redis.hSet(
-      `${pkey}:vary:${skey}`,
-      "headers",
-      JSON.stringify(resHeaders)
-    );
+    // cache with vary key (response)
+    multi.hSet(varyKey, {
+      status: String(res.status),
+      headers: JSON.stringify(resHeaders),
+      body: bodyBuf,
+    });
+    multi.expire(varyKey, ttl);
 
-    // cache response body as buffer
-    await redis.hSet(`${pkey}:vary:${skey}`, "body", bodyBuf);
+    await multi.exec();
   }
 };
 
