@@ -9,6 +9,8 @@ export const HOP_BY_HOP_HEADERS = [
   "trailer",
   "transfer-encoding",
   "upgrade",
+  "content-length",
+  "cookie",
 ];
 
 const sanitizeHeaders = (req: Request): Headers => {
@@ -24,9 +26,15 @@ const sanitizeHeaders = (req: Request): Headers => {
     }
 
     if (Array.isArray(value)) {
-      sanitized.set(key, value.join(", "));
+      sanitized.set(
+        key.toLowerCase(),
+        value
+          .map((v) => String(v).trim())
+          .sort()
+          .join(",")
+      );
     } else if (value !== undefined) {
-      sanitized.set(key, String(value));
+      sanitized.set(key.toLowerCase(), String(value).trim());
     }
   }
 
