@@ -1,5 +1,5 @@
 import request from "supertest";
-import { describe, it, afterEach } from "node:test";
+import { describe, it } from "node:test";
 import assert from "node:assert";
 import app from "../app.ts";
 import nock from "nock";
