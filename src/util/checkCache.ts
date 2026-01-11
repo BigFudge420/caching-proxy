@@ -24,7 +24,7 @@ const checkCache = async (req: Request, pkey: string) => {
     return {
       status: parseInt(status),
       headers: JSON.parse(resHeaders),
-      body: resBody,
+      body: resBody ? Buffer.from(resBody, "base64") : null,
     };
   }
 
@@ -32,7 +32,9 @@ const checkCache = async (req: Request, pkey: string) => {
   const varyHeaders: Record<string, string | null> = {};
   for (const v of varyArr) {
     const value = req.headers[v];
-    varyHeaders[v] = Array.isArray(value) ? value.join(",") : value ?? null;
+    varyHeaders[v] = Array.isArray(value)
+      ? value.join(",").toLowerCase()
+      : value?.toLowerCase() ?? null;
   }
 
   // create secondary key
@@ -56,7 +58,7 @@ const checkCache = async (req: Request, pkey: string) => {
   return {
     status: parseInt(status),
     headers: JSON.parse(resHeaders),
-    body: resBody,
+    body: resBody ? Buffer.from(resBody, "base64") : null,
   };
 };
 

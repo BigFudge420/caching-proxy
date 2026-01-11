@@ -1,4 +1,4 @@
-export const normalizeURL = (urlStr: string): string => {
+const normalizeURL = (urlStr: string): string => {
   const url = new URL(urlStr);
 
   url.protocol = url.protocol.toLowerCase();
@@ -48,3 +48,5 @@ export const normalizeURL = (urlStr: string): string => {
 
   return url.toString();
 };
+
+export default normalizeURL;

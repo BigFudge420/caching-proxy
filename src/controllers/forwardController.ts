@@ -8,13 +8,14 @@ import crypto from "crypto";
 import config from "../util/config.ts";
 import checkCache from "../util/checkCache.ts";
 import updateCache from "../util/updateCache.ts";
+import normalizeURL from "../util/normalizeURL.ts";
 
 const forwardController = async (
   req: Request,
   res: Response,
   _next: NextFunction
 ) => {
-  const upstreamURL = argv.origin + req.originalUrl;
+  const upstreamURL = normalizeURL(argv.origin + req.originalUrl);
 
   // create pkey
   const secret = config.secret;
@@ -24,7 +25,7 @@ const forwardController = async (
     .digest("hex");
 
   // check cache (skip in test mode)
-  let cache: false | { status: number; headers: any; body: string | null } =
+  let cache: false | { status: number; headers: any; body: Buffer | null } =
     false;
   if (!process.env.NODE_ENV?.includes("test")) {
     try {
@@ -40,14 +41,11 @@ const forwardController = async (
     res.status(cache.status);
 
     for (const [k, v] of Object.entries(cache.headers)) {
-      if (HOP_BY_HOP_HEADERS.includes(k.toLowerCase())) {
-        continue;
-      }
-
+      if (HOP_BY_HOP_HEADERS.includes(k.toLowerCase())) continue;
       res.setHeader(k, String(v));
     }
 
-    if (cache.body) res.setHeader("Content-Length", cache.body?.length);
+    if (cache.body) res.setHeader("Content-Length", cache.body.length);
     res.setHeader("X-Cache", "HIT");
     return res.send(cache.body);
   }
@@ -66,9 +64,8 @@ const forwardController = async (
   const resBody = Buffer.from(await upstreamRes.arrayBuffer());
 
   for (const [k, v] of upstreamRes.headers.entries()) {
-    if (HOP_BY_HOP_HEADERS.includes(k.toLowerCase())) {
-      continue;
-    }
+    if (HOP_BY_HOP_HEADERS.includes(k.toLowerCase())) continue;
+    if (k.trim().toLowerCase() === "content-encoding") continue;
 
     res.setHeader(k, v);
   }

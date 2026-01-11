@@ -29,7 +29,9 @@
   "dependencies": {
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "node-fetch": "^3.3.2",
     "redis": "^5.10.0",
+    "undici": "^7.18.2",
     "yargs": "^18.0.0"
   },
   "devDependencies": {

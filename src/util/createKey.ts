@@ -2,7 +2,7 @@ import config from "./config.ts";
 import crypto from "crypto";
 import type { Request } from "express";
 import normalizeHeaders from "./normalizeHeaders.ts";
-import { normalizeURL } from "./normalizeURL.ts";
+import normalizeURL from "./normalizeURL.ts";
 
 const createKey = (req: Request): string => {
   const normalizedUrl = normalizeURL(req.originalUrl);

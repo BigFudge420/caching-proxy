@@ -1,5 +1,5 @@
 import { describe, it } from "node:test";
-import { normalizeURL } from "./normalizeURL.ts";
+import normalizeURL from "./normalizeURL.ts";
 import assert from "node:assert";
 
 describe("normalizeURL", () => {

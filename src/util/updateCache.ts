@@ -14,9 +14,22 @@ const updateCache = async (
 
   // check for vary headers
   if (res.headers.get("vary")?.trim()) {
-    const varyHeader: string = res.headers.get("vary") ?? "";
-    if (varyHeader === "*") return;
+    let varyHeader: string = res.headers.get("vary") ?? "";
     if (!varyHeader) return;
+
+    if (varyHeader && varyHeader !== "*") {
+      const varyKeys = varyHeader
+        .toLowerCase()
+        .split(",")
+        .map((v) => v.trim());
+      if (!varyKeys.includes("accept-encoding")) {
+        varyHeader += ", accept-encoding";
+      }
+    } else if (!varyHeader) {
+      varyHeader = "accept-encoding";
+    }
+
+    if (varyHeader === "*") return;
 
     const varyKeys = varyHeader
       .toLowerCase()
@@ -57,6 +70,8 @@ const updateCache = async (
     const resHeaders: Record<string, string> = {};
     for (const [k, v] of res.headers.entries()) {
       if (HOP_BY_HOP_HEADERS.includes(k.toLowerCase())) continue;
+      if (k.trim().toLowerCase() === "content-encoding") continue;
+
       resHeaders[k] = v;
     }
 
@@ -64,7 +79,7 @@ const updateCache = async (
     multi.hSet(varyKey, {
       status: String(res.status),
       headers: JSON.stringify(resHeaders),
-      body: bodyBuf,
+      body: bodyBuf.toString("base64"),
     });
     multi.expire(varyKey, ttl);
 
@@ -91,6 +106,8 @@ const updateCache = async (
     const resHeaders: Record<string, string> = {};
     for (const [k, v] of res.headers.entries()) {
       if (HOP_BY_HOP_HEADERS.includes(k.toLowerCase())) continue;
+      if (k.trim().toLowerCase() === "content-encoding") continue;
+
       resHeaders[k] = v;
     }
 
@@ -98,7 +115,7 @@ const updateCache = async (
     multi.hSet(varyKey, {
       status: String(res.status),
       headers: JSON.stringify(resHeaders),
-      body: bodyBuf,
+      body: bodyBuf.toString("base64"),
     });
     multi.expire(varyKey, ttl);
 
