@@ -8,14 +8,13 @@ import crypto from "crypto";
 import config from "../util/config.ts";
 import checkCache from "../util/checkCache.ts";
 import updateCache from "../util/updateCache.ts";
-import normalizeURL from "../util/normalizeURL.ts";
 
 const forwardController = async (
   req: Request,
   res: Response,
   _next: NextFunction
 ) => {
-  const upstreamURL = normalizeURL(argv.origin + req.originalUrl);
+  const upstreamURL = new URL(argv.origin + req.originalUrl).toString();
 
   // create pkey
   const secret = config.secret;

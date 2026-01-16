@@ -9,8 +9,6 @@ export const HOP_BY_HOP_HEADERS = [
   "trailer",
   "transfer-encoding",
   "upgrade",
-  "content-length",
-  "cookie",
 ];
 
 const sanitizeHeaders = (req: Request): Headers => {
