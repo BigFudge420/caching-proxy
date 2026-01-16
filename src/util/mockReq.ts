@@ -9,6 +9,6 @@ const mockReq = (overrides: Partial<Request> = {}): Request =>
     params: {},
     query: {},
     ...overrides,
-  } as Request);
+  }) as Request;
 
 export default mockReq;

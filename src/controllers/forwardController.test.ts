@@ -136,7 +136,7 @@ describe("cacheController", () => {
       { hello: "world" },
       {
         "x-test": "works",
-      }
+      },
     );
 
     const res2 = await request(app).get("/product");

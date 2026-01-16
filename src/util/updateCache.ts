@@ -8,7 +8,7 @@ const updateCache = async (
   req: Request,
   res: globalThis.Response,
   bodyBuf: Buffer,
-  pkey: string
+  pkey: string,
 ) => {
   const ttl = config.ttl;
 
@@ -39,7 +39,7 @@ const updateCache = async (
     const vary: Record<string, string | null> = {};
     for (const key of varyKeys) {
       const value = req.headers[key];
-      vary[key] = Array.isArray(value) ? value.join(",") : value ?? null;
+      vary[key] = Array.isArray(value) ? value.join(",") : (value ?? null);
     }
 
     // create secondary key with vary headers

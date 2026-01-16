@@ -34,7 +34,7 @@ const checkCache = async (req: Request, pkey: string) => {
     const value = req.headers[v];
     varyHeaders[v] = Array.isArray(value)
       ? value.join(",").toLowerCase()
-      : value?.toLowerCase() ?? null;
+      : (value?.toLowerCase() ?? null);
   }
 
   // create secondary key

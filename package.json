@@ -7,6 +7,7 @@
     "test": "npm run test:utils && npm run test:controller",
     "test:utils": "node --test src/util/*.test.ts",
     "test:controller": "NODE_ENV=test node --test src/controllers/*.test.ts",
+    "prettier-watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}",
     "test:specific": "node --test",
     "dev": "node --watch src/server.ts",
     "start": "node src/server.ts"
@@ -28,9 +29,7 @@
   "dependencies": {
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "node-fetch": "^3.3.2",
     "redis": "^5.10.0",
-    "undici": "^7.18.2",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
@@ -39,6 +38,8 @@
     "@types/supertest": "^6.0.3",
     "@types/yargs": "^17.0.35",
     "nock": "^14.0.10",
+    "onchange": "^7.1.0",
+    "prettier": "3.8.0",
     "supertest": "^7.1.4",
     "typescript": "^5.9.3"
   }

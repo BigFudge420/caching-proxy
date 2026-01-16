@@ -12,7 +12,7 @@ import updateCache from "../util/updateCache.ts";
 const forwardController = async (
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) => {
   const upstreamURL = new URL(argv.origin + req.originalUrl).toString();
 
